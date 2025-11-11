@@ -5,10 +5,16 @@ export type ApiError = AxiosError<{ error: string }>;
 /**
  * Client-side API instance
  */
+// 🌍 Корректный baseURL для SSR и браузера
+const baseURL =
+  typeof window === 'undefined'
+    ? (process.env.NEXT_PUBLIC_BACKEND_URL
+        ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api`
+        : 'https://travel-fs116-teamproject-backend.onrender.com/api')
+    : '/api';
+
 export const api = axios.create({
-  baseURL:
-    process.env.NEXT_PUBLIC_API_URL ||
-    'https://travel-fs116-teamproject-backend.onrender.com/api',
+  baseURL,
   withCredentials: true,
   headers: { 'Content-Type': 'application/json' },
 });
@@ -41,7 +47,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   response => response,
   async (error: AxiosError) => {
-    if (!error.config) return Promise.reject(error); // 🔒 безпечно перевіряємо
+    if (!error.config) return Promise.reject(error);
 
     const originalRequest = error.config as InternalAxiosRequestConfig & {
       _retry?: boolean;
@@ -96,8 +102,7 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await api.post('/auth/refresh', {}, { withCredentials: true }); // ✅
-
+        await api.post('/auth/refresh', {}, { withCredentials: true });
         processQueue(null, null);
         return api(originalRequest);
       } catch (refreshError) {

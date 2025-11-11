@@ -13,23 +13,26 @@ export const serverApi = axios.create({
  * 🔁 Refresh session tokens (server-side)
  * Використовується у middleware для оновлення accessToken через httpOnly cookies
  */
-export const checkServerSession = async () => {
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore.toString();
+// lib/api/serverApi.ts
+export async function checkServerSession() {
+  const backend =
+    process.env.NEXT_PUBLIC_BACKEND_URL ||
+    'https://travel-fs116-teamproject-backend.onrender.com';
 
-  const res = await serverApi.post(
-    '/auth/refresh',
-    {},
-    {
-      headers: {
-        Cookie: cookieHeader, // 🔥 важливо передавати поточні куки
-      },
-      withCredentials: true,
-    }
-  );
+  const refreshUrl = `${backend}/api/auth/refresh`;
 
-  return res;
-};
+  const response = await fetch(refreshUrl, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to refresh session: ${response.status}`);
+  }
+
+  return response;
+}
 
 /**
  * 👤 Get current user (server-side)
@@ -39,7 +42,7 @@ export const getServerMe = async () => {
   const cookieStore = await cookies();
   const cookieHeader = cookieStore.toString();
 
-  const { data } = await serverApi.get<User>('/users/me/profile', {
+  const { data } = await serverApi.get<User>('/api/users/me/profile', {
     headers: {
       Cookie: cookieHeader,
     },

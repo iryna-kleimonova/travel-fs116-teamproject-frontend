@@ -13,7 +13,7 @@ const Join = () => {
 
   const handleButtonClick = () => {
     if (isAuthenticated) {
-      router.push('/users/me/profile');
+      router.push('/api/users/me/profile');
     } else {
       router.push('/auth/register');
     }
