@@ -17,10 +17,7 @@
   color: #000;
   background-color: rgba(0, 0, 0, 0.05);
 
-  transition:
-    border 250ms ease,
-    background-color 250ms ease,
-    color 250ms ease;
+  transition: all 0.3s ease;
 }
 
 .loginLink:hover,
@@ -28,6 +25,7 @@
   border: 1px solid transparent;
   background-color: #4169e1;
   color: #fff;
+  transform: translateY(-1px);
 }
 
 .loginLink:active {

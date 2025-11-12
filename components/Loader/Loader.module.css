@@ -1,0 +1,99 @@
+/*Loader*/
+
+.loader {
+  display: block;
+  position: relative;
+  top: 45px;
+  width: 75px; /*85*/
+  height: 16px; /**50*/
+  margin: 0 auto;
+  background-repeat: no-repeat;
+  background-image:
+    linear-gradient(#9c9c9c 50px, transparent 0),
+    linear-gradient(#9c9c9c 50px, transparent 0),
+    linear-gradient(#9c9c9c 50px, transparent 0),
+    linear-gradient(#9c9c9c 50px, transparent 0),
+    linear-gradient(#9c9c9c 50px, transparent 0),
+    linear-gradient(#9c9c9c 50px, transparent 0);
+  background-position:
+    0px center,
+    15px center,
+    30px center,
+    45px center,
+    60px center,
+    75px center;
+  animation: rikSpikeRoll 0.65s linear infinite alternate;
+}
+
+@keyframes rikSpikeRoll {
+  0% {
+    background-size: 10px 3px;
+  }
+  16% {
+    background-size:
+      10px 50px,
+      10px 3px,
+      10px 3px,
+      10px 3px,
+      10px 3px,
+      10px 3px;
+  }
+  33% {
+    background-size:
+      10px 30px,
+      10px 50px,
+      10px 3px,
+      10px 3px,
+      10px 3px,
+      10px 3px;
+  }
+  50% {
+    background-size:
+      10px 10px,
+      10px 30px,
+      10px 50px,
+      10px 3px,
+      10px 3px,
+      10px 3px;
+  }
+  66% {
+    background-size:
+      10px 3px,
+      10px 10px,
+      10px 30px,
+      10px 50px,
+      10px 3px,
+      10px 3px;
+  }
+  83% {
+    background-size:
+      10px 3px,
+      10px 3px,
+      10px 10px,
+      10px 30px,
+      10px 50px,
+      10px 3px;
+  }
+  100% {
+    background-size:
+      10px 3px,
+      10px 3px,
+      10px 3px,
+      10px 10px,
+      10px 30px,
+      10px 50px;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .loader {
+    width: 85px;
+    height: 30px;
+  }
+}
+
+@media only screen and (min-width: 1440px) {
+  .loader {
+    height: 50px;
+  }
+}

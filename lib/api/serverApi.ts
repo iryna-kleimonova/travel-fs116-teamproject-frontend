@@ -1,52 +1,59 @@
 import { cookies } from 'next/headers';
-import { User } from '@/types/user';
-import axios from 'axios';
-
-// ✅ окремий instance для серверних запитів
-export const serverApi = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api',
-  withCredentials: true,
-  headers: { 'Content-Type': 'application/json' },
-});
+import { api } from '@/app/api/api';
+import { User, GetUsersResponse } from '@/types/user';
+import { isAxiosError } from 'axios';
 
 /**
- * 🔁 Refresh session tokens (server-side)
- * Використовується у middleware для оновлення accessToken через httpOnly cookies
+ * Refresh session tokens (server-side)
+ * Backend expects POST /api/auth/refresh
  */
-export async function checkServerSession() {
-  const backend =
-    process.env.NEXT_PUBLIC_BACKEND_URL ||
-    'https://travel-fs116-teamproject-backend.onrender.com';
+export const checkServerSession = async () => {
+  const cookieStore = await cookies();
 
-  const refreshUrl = `${backend}/api/auth/refresh`;
-
-  const response = await fetch(refreshUrl, {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to refresh session: ${response.status}`);
-  }
-
-  return response;
-}
+  const res = await api.post(
+    '/auth/refresh',
+    {},
+    {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
+    }
+  );
+  return res;
+};
 
 /**
- * 👤 Get current user (server-side)
- * Використовується у SSR для отримання профілю користувача
+ * Get current user (server-side)
  */
 export const getServerMe = async () => {
   const cookieStore = await cookies();
-  const cookieHeader = cookieStore.toString();
-
-  const { data } = await serverApi.get<User>('/api/users/me/profile', {
+  // Backend endpoint is /users/me/profile, not /users/me
+  const { data } = await api.get<User>('/users/me/profile', {
     headers: {
-      Cookie: cookieHeader,
+      Cookie: cookieStore.toString(),
     },
-    withCredentials: true,
   });
-
   return data;
 };
+
+export async function getUsersServer(
+  page = 1,
+  perPage = 4
+): Promise<GetUsersResponse> {
+  try {
+    const res = await api.get<GetUsersResponse>('/users', {
+      params: { page, perPage },
+    });
+    return res.data;
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      console.error('[getUsersServer error]', error.message);
+      throw new Error(
+        error.response?.data?.error || 'Failed to fetch users from server'
+      );
+    } else {
+      console.error('[getUsersServer unknown error]', error);
+      throw new Error('Unknown server error');
+    }
+  }
+}

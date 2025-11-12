@@ -20,12 +20,10 @@ export const useAuthStore = create<AuthStore>()(
       isLoading: true,
 
       setUser: (user: User) => {
-        console.log('🔄 Setting user in store:', user);
         set({ user, isAuthenticated: true, isLoading: false });
       },
 
       clearIsAuthenticated: () => {
-        console.log('🔄 Clearing authentication');
         set({ user: null, isAuthenticated: false, isLoading: false });
       },
 

@@ -1,271 +1,259 @@
 .story {
-    width: 100%;
-    background-color: #E8EEFF;
-    border-radius: 16px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  width: 100%;
+  background-color: #e8eeff;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-
 @media screen and (min-width: 768px) {
-    .story {
-        width: calc((100% - 24px) / 2);
-    }
+  .story {
+    width: calc((100% - 24px) / 2);
+  }
 }
 
 @media screen and (min-width: 1440px) {
-    .story {
-        width: calc((100% - 48px) / 3);
-    }
+  .story {
+    width: calc((100% - 48px) / 3);
+  }
 }
 
 .story__img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
 }
 
 .story__content {
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
-
-
 
 .story__category {
-    font-family: var(--font-nunito-sans);
-    font-weight: 600;
-    font-size: 12px;
-    line-height: 1.5;
-    color: #000;
-    margin-bottom: 8px;
+  font-family: var(--font-nunito-sans);
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #000;
+  margin-bottom: 8px;
 }
 
-
-@media screen and (min-width: 1440px){
-    .story__category{
-font-size: 16px;
-    }
+@media screen and (min-width: 1440px) {
+  .story__category {
+    font-size: 16px;
+  }
 }
 
 .story__title {
-    font-family: var(--font-nunito-sans);
-    font-weight: 700;
-    font-size: 18px;
-    line-height: 1.5;
-    height: 3em;
-    color: #000;
-    margin-bottom: 8px;
-display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  font-family: var(--font-nunito-sans);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.5;
+  height: 3em;
+  color: #000;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-
 @media screen and (min-width: 1440px) {
-.story__title{
-        font-size: 24px;
-    }
+  .story__title {
+    font-size: 24px;
+  }
 }
 
 .story__text {
-font-family: var(--font-nunito-sans);
-    font-weight: 400;
-    font-size: 16px;
-line-height: 1.5;
-    color: #000;
-    margin-bottom: 20px;
-    display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
-        overflow: hidden;
-   flex-grow: 1;
-   margin-top: auto;
+  font-family: var(--font-nunito-sans);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #000;
+  margin-bottom: 20px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  flex-grow: 1;
+  margin-top: auto;
 }
 
 @media screen and (min-width: 1440px) {
-    .story__text {
-        font-size: 18px;
-    }
+  .story__text {
+    font-size: 18px;
+  }
 }
 
 .story__author {
-    display: flex;
-    align-items: center;
-    margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
 .story__avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 16px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 16px;
 }
 
 .story__name {
-    font-family: var(--font-nunito-sans);
-    font-weight: 600;
-    font-size: 12px;
-line-height: 1.5;
-    color: #000;
+  font-family: var(--font-nunito-sans);
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #000;
 }
 
 @media screen and (min-width: 1440px) {
-    .story__name {
-        font-size: 16px;
-    }
+  .story__name {
+    font-size: 16px;
+  }
 }
-
 
 .meta {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    color: #555;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #555;
 }
-
-
 
 .story__meta {
-font-family: var(--font-nunito-sans);
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 1.5;
+  font-family: var(--font-nunito-sans);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 @media screen and (min-width: 1440px) {
-    .story__meta {
-        font-size: 16px;
-    }
+  .story__meta {
+    font-size: 16px;
+  }
 }
 
-.favoriteCount{
-    font-family: var(--font-nunito-sans);
-        font-weight: 400;
-        font-size: 12px;
-        line-height: 1.5;
-    margin-right: 2px;
+.favoriteCount {
+  font-family: var(--font-nunito-sans);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.5;
+  margin-right: 2px;
 }
 
 @media screen and (min-width: 1440px) {
-    .favoriteCount {
-        font-size: 16px;
-    }
+  .favoriteCount {
+    font-size: 16px;
+  }
 }
 
 .favoriteCount::before {
-    content: "•";
-    margin: 0 6px;
-    color: #555;
+  content: '•';
+  margin: 0 6px;
+  color: #555;
 }
 
-.icon{
-    fill:#0a0a0a;
-    width: 16px;
-    height: 16px;
+.icon {
+  fill: #0a0a0a;
+  width: 16px;
+  height: 16px;
 }
 
 .story__actions {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 /* основная кнопка — как раньше */
 .story__btn {
-
-    border-radius: 8px;
-    padding: 6px 12px;
-    width: 100%;
-    height: 48px;
-    background: #0000000D;
-    border: 1px solid #e5e7eb;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: var(--font-nunito-sans);
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 1.5;
-        color: #000
+  border-radius: 8px;
+  padding: 6px 12px;
+  width: 100%;
+  height: 48px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-nunito-sans);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #000;
 }
 
 @media screen and (min-width: 1440px) {
-    .story__btn {
-        font-size: 18px;
-    }
+  .story__btn {
+    font-size: 18px;
+  }
 }
 
 .story__btn:hover,
 .story__btn:focus {
-    background: #4169e1;
-    border: none;
-    color: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(59, 130, 246, 0.08);
+  background: #4169e1;
+  border: none;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(59, 130, 246, 0.08);
 }
 
-
-
 .story__save {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: #0000000D;
-    border-radius: 8px;
-    padding: 6px;
-    width: 48px;
-    height: 48px;
-    border: 1px solid #e6e9f2;
-    cursor: pointer;
-    transition: all 0.18s ease;
-    flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  padding: 6px;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  flex-shrink: 0;
 }
 
 /* иконка внутри */
 .story__save .icon__bookmark {
-    color: #0a0a0a;
-    width: 24px;
-    height: 24px;
+  color: #0a0a0a;
+  width: 24px;
+  height: 24px;
 }
 
 .story__save:hover .icon__bookmark,
 .story__save:focus .icon__bookmark {
-    color: #fff;
+  color: #fff;
+  fill: currentColor;
 }
 
 /* hover / focus */
 .story__save:hover,
 .story__save:focus {
-    background: #4169e1;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(59, 130, 246, 0.08);
-    border: none;
+  background: #4169e1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(59, 130, 246, 0.08);
+  border: none;
 }
 
 /* состояние "сохранено" — выделяется цветом */
 .story__save.saved {
-    background: var(--primary);
-    border-color: var(--primary);
+  background: var(--primary);
+  border-color: var(--primary);
 }
 
 .story__save.saved .icon__bookmark {
-    color: #fff;
-    fill: currentColor;
-    stroke: none;
-    /* если хотим сплошную заливку */
+  color: #fff;
+  fill: currentColor;
+  stroke: none;
+  /* если хотим сплошную заливку */
 }
 
-
 .story__save:focus {
-    outline: 3px solid rgba(59, 130, 246, 0.12);
-    outline-offset: 2px;
+  outline: 3px solid rgba(59, 130, 246, 0.12);
+  outline-offset: 2px;
 }

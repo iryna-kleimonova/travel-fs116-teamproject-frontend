@@ -1,8 +1,9 @@
-import { User } from '@/types/user';
+import { User, GetUsersResponse } from '@/types/user';
 import { api } from './api';
 import { LoginRequest, RegisterRequest } from '@/types/auth';
 import { extractUser } from './errorHandler';
 import { StoriesResponse, Story } from '@/types/story';
+import { AxiosError } from 'axios';
 
 /**
  * Register user
@@ -25,10 +26,46 @@ export const login = async (data: LoginRequest) => {
 /**
  * Get current user
  */
-export const getMe = async () => {
-  const { data } = await api.get<User>('/users/me/profile');
-  const user = extractUser(data) as User | null;
-  return user;
+export const getMe = async (silent: boolean = false) => {
+  try {
+    const response = await api.get('/users/me');
+
+    if (response.data && typeof response.data === 'object') {
+      if ('data' in response.data && response.data.data) {
+        const userData = response.data.data;
+        if (
+          userData &&
+          typeof userData === 'object' &&
+          '_id' in userData &&
+          'name' in userData
+        ) {
+          return userData as User;
+        }
+      }
+
+      const user = extractUser(response.data) as User | null;
+      if (user) {
+        return user;
+      }
+    }
+
+    return null;
+  } catch (error) {
+    if (silent) {
+      // Тиха обробка - не логуємо помилку
+      return null;
+    }
+    const axiosError = error as AxiosError;
+    if (axiosError.response?.status === 401) {
+      // 401 - це очікувано, якщо користувач не залогінений
+      // Не логуємо як помилку
+      return null;
+    }
+
+    // ✅ Логуємо інші помилки
+    console.error('❌ Error in getMe:', error);
+    throw error;
+  }
 };
 
 /**
@@ -47,34 +84,44 @@ export const logout = async () => {
  */
 export const checkSession = async (): Promise<boolean> => {
   try {
-    const response = await api.get('/users/me/profile');
+    console.log('🔍 Checking session via /api/users/me');
+    const response = await api.get('/users/me');
+    console.log('✅ Session check response:', response.status);
     return response.status >= 200 && response.status < 300;
   } catch (error) {
-    console.log(error);
+    console.log('Session check failed:', error);
+
     return false;
   }
 };
 
-/**
- * Fetch popular stories
- */
 export async function fetchStories(page = 1, perPage = 3): Promise<Story[]> {
-  const response = await api.get<StoriesResponse>('/stories', {
+  const response = await api.get<StoriesResponse>(`/stories`, {
     params: { page, perPage, sort: 'favoriteCount' },
   });
+  // console.log(response);
   return response.data?.data || [];
 }
 
-/**
- * Add story to favorites
- */
+fetchStories(1, 3);
+
 export async function addStoryToFavorites(storyId: string): Promise<void> {
   await api.post(`/stories/${storyId}/favorite`);
 }
 
-/**
- * Remove story from favorites
- */
 export async function removeStoryFromFavorites(storyId: string): Promise<void> {
   await api.delete(`/stories/${storyId}/favorite`);
+}
+
+export async function getUsersClient({
+  page = 1,
+  perPage = 4,
+}: {
+  page: number;
+  perPage: number;
+}): Promise<GetUsersResponse> {
+  const res = await api.get<GetUsersResponse>('/users', {
+    params: { page, perPage },
+  });
+  return res.data;
 }
