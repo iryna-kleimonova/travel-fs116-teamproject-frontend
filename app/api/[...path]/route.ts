@@ -19,15 +19,16 @@ async function proxy(req: NextRequest, path: string[]) {
   if (contentType) headers['content-type'] = contentType;
   if (authorization) headers['authorization'] = authorization;
 
+  // 🧠 важливо: читаємо тіло перед відправкою
+  const rawBody = req.body ? await req.text() : undefined;
+
   const fetchRes = await fetch(url, {
     method: req.method,
     headers,
-    body: req.body ?? undefined,
+    body: rawBody,
     redirect: 'manual',
-    ...(req.body ? ({ duplex: 'half' } as Record<string, unknown>) : {}),
   });
 
-  // 🔧 убираем gzip / transfer-encoding
   const resHeaders = new Headers(fetchRes.headers);
   resHeaders.delete('content-encoding');
   resHeaders.delete('transfer-encoding');
@@ -44,27 +45,23 @@ async function proxy(req: NextRequest, path: string[]) {
   });
 }
 
-// ⚡ теперь корректно: ждём params перед передачей
+// ⚡ Тепер усі методи працюють однаково
 export async function GET(req: NextRequest, ctx: { params: Promise<{ path: string[] }> }) {
   const { path } = await ctx.params;
   return proxy(req, path);
 }
-
 export async function POST(req: NextRequest, ctx: { params: Promise<{ path: string[] }> }) {
   const { path } = await ctx.params;
   return proxy(req, path);
 }
-
 export async function PATCH(req: NextRequest, ctx: { params: Promise<{ path: string[] }> }) {
   const { path } = await ctx.params;
   return proxy(req, path);
 }
-
 export async function PUT(req: NextRequest, ctx: { params: Promise<{ path: string[] }> }) {
   const { path } = await ctx.params;
   return proxy(req, path);
 }
-
 export async function DELETE(req: NextRequest, ctx: { params: Promise<{ path: string[] }> }) {
   const { path } = await ctx.params;
   return proxy(req, path);

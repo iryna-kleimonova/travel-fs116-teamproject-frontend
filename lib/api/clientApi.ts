@@ -2,6 +2,7 @@ import { User } from '@/types/user';
 import { api } from './api';
 import { LoginRequest, RegisterRequest } from '@/types/auth';
 import { extractUser } from './errorHandler';
+import { StoriesResponse, Story } from '@/types/story';
 
 /**
  * Register user
@@ -53,3 +54,27 @@ export const checkSession = async (): Promise<boolean> => {
     return false;
   }
 };
+
+/**
+ * Fetch popular stories
+ */
+export async function fetchStories(page = 1, perPage = 3): Promise<Story[]> {
+  const response = await api.get<StoriesResponse>('/stories', {
+    params: { page, perPage, sort: 'favoriteCount' },
+  });
+  return response.data?.data || [];
+}
+
+/**
+ * Add story to favorites
+ */
+export async function addStoryToFavorites(storyId: string): Promise<void> {
+  await api.post(`/stories/${storyId}/favorite`);
+}
+
+/**
+ * Remove story from favorites
+ */
+export async function removeStoryFromFavorites(storyId: string): Promise<void> {
+  await api.delete(`/stories/${storyId}/favorite`);
+}
