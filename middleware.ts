@@ -30,7 +30,7 @@ export async function middleware(request: NextRequest) {
         const data = await checkServerSession();
         console.log('✅ Refresh response status:', data.status);
 
-       const setCookie = data.headers.getSetCookie?.();
+        const setCookie = data.headers.getSetCookie?.();
 
         if (setCookie) {
           console.log('📦 Received new cookies from backend');

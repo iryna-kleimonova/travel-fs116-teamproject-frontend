@@ -10,11 +10,12 @@ type NavProps = {
 };
 
 export default function AuthNavigation({ variant }: NavProps) {
-  // const isAuthenticated = true;
-
   const isAuthenticated = useAuthStore(state => state.isAuthenticated);
-
-  // console.log(isAuthenticated);
+  const isLoading = useAuthStore(state => state.isLoading);
+  if (isLoading) {
+    // Можна показати skeleton або просто не показувати нічого
+    return null; // або <li>Завантаження...</li>
+  }
 
   return (
     <>
@@ -48,7 +49,7 @@ export default function AuthNavigation({ variant }: NavProps) {
           >
             <Link
               className={`${css.publichStoryLink} ${variant === 'header-main-page' ? css.publichStoryLinkMainPage : ''}`}
-              href="#"
+              href="/stories/create"
             >
               Опублікувати історію
             </Link>

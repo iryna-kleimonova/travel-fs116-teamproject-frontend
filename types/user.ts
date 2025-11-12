@@ -1,8 +1,8 @@
 export type User = {
-  id: string;
+  _id: string;
   email: string;
   name: string;
-  avatar?: string;
+  avatarUrl?: string;
   createdAt: string;
   updatedAt: string;
 };

@@ -28,11 +28,8 @@ let failedQueue: Array<{
 
 const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue.forEach(prom => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve(token);
-    }
+    if (error) prom.reject(error);
+    else prom.resolve(token);
   });
   failedQueue = [];
 };
@@ -57,6 +54,7 @@ api.interceptors.response.use(
     if (originalRequest.url?.includes('/auth/refresh')) {
       return Promise.reject(error);
     }
+
     if (
       originalRequest.url?.includes('/auth/register') ||
       originalRequest.url?.includes('/auth/login')

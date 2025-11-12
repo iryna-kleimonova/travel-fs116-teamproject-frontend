@@ -1,6 +1,6 @@
 'use client';
 
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
 
 import { useAuth } from '@/lib/hooks/useAuth';
 import { LoginRequest } from '@/types/auth';
@@ -15,8 +15,29 @@ const LoginForm = () => {
     password: '',
   };
 
-  const handleSubmit = async (values: LoginRequest) => {
-    await login(values);
+  const handleSubmit = async (
+    values: LoginRequest,
+    { setFieldError }: FormikHelpers<LoginRequest>
+  ) => {
+    try {
+      await login(values);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        if (
+          error.message.includes('email') ||
+          error.message.includes('пошта')
+        ) {
+          setFieldError('email', error.message);
+        } else if (
+          error.message.includes('password') ||
+          error.message.includes('пароль')
+        ) {
+          setFieldError('password', error.message);
+        } else {
+          setFieldError('email', error.message);
+        }
+      }
+    }
   };
 
   return (

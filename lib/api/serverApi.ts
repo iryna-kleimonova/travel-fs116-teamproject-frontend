@@ -13,7 +13,6 @@ export const serverApi = axios.create({
  * 🔁 Refresh session tokens (server-side)
  * Використовується у middleware для оновлення accessToken через httpOnly cookies
  */
-// lib/api/serverApi.ts
 export async function checkServerSession() {
   const backend =
     process.env.NEXT_PUBLIC_BACKEND_URL ||

@@ -1,16 +1,16 @@
 // import { User } from "./user";
 
 export type Story = {
-    _id: string;
-    img: string;
-    title: string;
-    article: string;
-    category: Category;
-    ownerId: Author;
-    date: string;
-    favoriteCount: number;
-    isFavorite?: boolean;
-}
+  _id: string;
+  img: string;
+  title: string;
+  article: string;
+  category: Category;
+  ownerId: Author;
+  date: string;
+  favoriteCount: number;
+  isFavorite?: boolean;
+};
 
 export interface Category {
   _id: string;
@@ -25,11 +25,21 @@ export interface Author {
   description?: string;
 }
 
+export interface StoriesResponse {
+  status: number;
+  message: string;
+  page: number;
+  perPage: number;
+  total: number;
+  totalPages: number;
+  data: Story[];
+}
+
 // export interface FetchStoriesParams {
 //     page?: number;
 //     perPage?: number;
 // }
-    
+
 // export interface FetchStoriesResponse {
 //     page: number;
 //     data: Story[];

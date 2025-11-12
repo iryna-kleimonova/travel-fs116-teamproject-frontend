@@ -1,6 +1,7 @@
 .section {
   padding: 32px 0;
   overflow: hidden;
+  scroll-margin-top: 104px;
 }
 
 .joinCard {
@@ -52,6 +53,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 @media only screen and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 2),
@@ -63,22 +65,22 @@
   }
 }
 
-.button:hover:not(:disabled),
-.button:focus:not(:disabled) {
+.button:hover:not([aria-disabled='true']),
+.button:focus:not([aria-disabled='true']) {
   background-color: #e8eeff;
   color: #000000;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(84, 104, 231, 0.3);
 }
 
-.button:active:not(:disabled) {
+.button:active:not([aria-disabled='true']) {
   background-color: #7a96ea;
   color: #000000;
   transform: translateY(0);
 }
 
-.button:disabled,
-.button:disabled:hover {
+.button[aria-disabled='true'],
+.button[aria-disabled='true']:hover {
   background-color: #4169e1;
   opacity: 0.3;
   border-color: transparent;

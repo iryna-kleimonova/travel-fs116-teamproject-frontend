@@ -49,9 +49,7 @@ export const checkSession = async (): Promise<boolean> => {
     const response = await api.get('/users/me/profile');
     return response.status >= 200 && response.status < 300;
   } catch (error) {
-    // const axiosError = error as ApiError;
     console.log(error);
-
     return false;
   }
 };

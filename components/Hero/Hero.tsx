@@ -9,14 +9,11 @@ export default function Hero() {
       <div className={styles.overlay} />
       <div className={`container ${styles.container}`}>
         <div className={styles.content}>
-          <h1 className={styles.title}>
-            <span className={styles.titleLine}>Відкрийте світ</span>
-            <span className={styles.titleLine}>подорожей з нами!</span>
-          </h1>
+          <h1 className={styles.title}>Відкрийте світ подорожей з нами!</h1>
           <p className={styles.description}>
-            Приєднуйтесь до нашої спільноти мандрівників, де ви зможете
-            ділитися своїми історіями та отримувати натхнення для нових пригод.
-            Відкрийте для себе нові місця та знайдіть однодумців!
+            Приєднуйтесь до нашої спільноти мандрівників, де ви зможете ділитися
+            своїми історіями та отримувати натхнення для нових пригод. Відкрийте
+            для себе нові місця та знайдіть однодумців!
           </p>
           <Link href="/#join" className={styles.cta}>
             Доєднатись

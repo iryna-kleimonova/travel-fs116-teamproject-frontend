@@ -5,8 +5,6 @@ import OurTravelers from '@/components/OurTravelers/OurTravelers';
 import Join from '@/components/Join/Join';
 
 export default function MainPage() {
-  
-  
   return (
     <>
       <Hero />

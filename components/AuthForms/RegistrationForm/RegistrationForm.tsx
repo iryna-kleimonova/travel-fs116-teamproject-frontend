@@ -1,6 +1,6 @@
 'use client';
 
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { RegisterRequest } from '@/types/auth';
 import styles from './RegistrationForm.module.css';
@@ -15,8 +15,35 @@ const RegistrationForm = () => {
     password: '',
   };
 
-  const handleSubmit = async (values: RegisterRequest) => {
-    await register(values);
+  const handleSubmit = async (
+    values: RegisterRequest,
+    { setFieldError }: FormikHelpers<RegisterRequest>
+  ) => {
+    try {
+      await register(values);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        if (
+          error.message.includes('email') ||
+          error.message.includes('пошта')
+        ) {
+          setFieldError('email', error.message);
+        } else if (
+          error.message.includes('password') ||
+          error.message.includes('пароль')
+        ) {
+          setFieldError('password', error.message);
+        } else if (
+          error.message.includes('name') ||
+          error.message.includes('ім')
+        ) {
+          setFieldError('name', error.message);
+        } else {
+          // General error
+          setFieldError('email', error.message);
+        }
+      }
+    }
   };
 
   return (

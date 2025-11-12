@@ -1,15 +1,12 @@
-'use client'
+'use client';
 
 import { useEffect, useState } from 'react';
 import TravellersStories from '../TravellersStories/TravellersStories';
 import css from './Popular.module.css';
-import { fetchStories } from '@/lib/api/serverApiStories';
+import { fetchStories } from '@/lib/api/clientApi';
 import { Story } from '@/types/story';
 import { useBreakpointStore } from '@/lib/store/breakpointStore';
 import { useAuthStore } from '@/lib/store/authStore';
-
-
-
 
 export default function Popular() {
   const [stories, setStories] = useState<Story[]>([]);
@@ -19,10 +16,9 @@ export default function Popular() {
   const { screenSize, screenSizeReady } = useBreakpointStore();
   const isAuthenticated = useAuthStore(state => state.isAuthenticated);
 
-
   const perPage = screenSize === 'tablet' ? 4 : 3;
-  
-   useEffect(() => {
+
+  useEffect(() => {
     if (!screenSizeReady) return;
 
     const loadStories = async () => {
@@ -60,18 +56,21 @@ export default function Popular() {
     <section className="stories">
       <div className="container">
         <h2 className={css.stories__title}>Популярні історії</h2>
-        <TravellersStories stories={stories} isAuthenticated={isAuthenticated} />
+        <TravellersStories
+          stories={stories}
+          isAuthenticated={isAuthenticated}
+        />
         {hasMore && (
-        <div className={css.stories__footer}>
-          <button
-            onClick={handleLoadMore}
-            disabled={loading}
-            className={css.stories__more}
-          >
-            {loading ? 'Завантаження...' : 'Переглянути всі'}
-          </button>
-        </div>
-      )}
+          <div className={css.stories__footer}>
+            <button
+              onClick={handleLoadMore}
+              disabled={loading}
+              className={css.stories__more}
+            >
+              {loading ? 'Завантаження...' : 'Переглянути всі'}
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

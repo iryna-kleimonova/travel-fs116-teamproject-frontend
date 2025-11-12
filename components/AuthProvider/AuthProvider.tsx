@@ -1,6 +1,6 @@
 'use client';
 
-import { checkSession, getMe } from '@/lib/api/clientApi';
+import { getMe } from '@/lib/api/clientApi';
 import { useAuthStore } from '@/lib/store/authStore';
 import { useEffect, useState } from 'react';
 
@@ -22,22 +22,15 @@ const AuthProvider = ({ children }: Props) => {
 
       try {
         setLoading(true);
-        const hasSession = await checkSession();
 
-        if (hasSession) {
-          const user = await getMe();
+        const user = await getMe(true);
 
-          if (user) {
-            setUser(user);
-          } else {
-            console.warn('Session exists but no user data found');
-            clearIsAuthenticated();
-          }
+        if (user) {
+          setUser(user);
         } else {
           clearIsAuthenticated();
         }
-      } catch (error) {
-        console.error('Auth initialization failed:', error);
+      } catch {
         clearIsAuthenticated();
       } finally {
         setLoading(false);
