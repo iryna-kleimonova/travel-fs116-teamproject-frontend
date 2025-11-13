@@ -1,14 +1,15 @@
 'use client';
 
-import { getMe } from '@/lib/api/clientApi';
 import { useAuthStore } from '@/lib/store/authStore';
+import { User } from '@/types/user';
 import { useEffect, useState } from 'react';
 
 type Props = {
   children: React.ReactNode;
+  initialUser?: User | null;
 };
 
-const AuthProvider = ({ children }: Props) => {
+const AuthProvider = ({ children, initialUser = null }: Props) => {
   const setUser = useAuthStore(state => state.setUser);
   const clearIsAuthenticated = useAuthStore(
     state => state.clearIsAuthenticated
@@ -20,26 +21,22 @@ const AuthProvider = ({ children }: Props) => {
     const fetchSession = async () => {
       if (isInitialized) return;
 
-      try {
-        setLoading(true);
+      setLoading(true);
 
-        const user = await getMe(true);
-
-        if (user) {
-          setUser(user);
-        } else {
-          clearIsAuthenticated();
-        }
-      } catch {
-        clearIsAuthenticated();
-      } finally {
+      if (initialUser) {
+        setUser(initialUser);
         setLoading(false);
         setIsInitialized(true);
+        return;
       }
+
+      clearIsAuthenticated();
+      setLoading(false);
+      setIsInitialized(true);
     };
 
     fetchSession();
-  }, [clearIsAuthenticated, setUser, setLoading, isInitialized]);
+  }, [initialUser, clearIsAuthenticated, setUser, setLoading, isInitialized]);
 
   return <>{children}</>;
 };

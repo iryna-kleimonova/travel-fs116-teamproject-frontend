@@ -5,7 +5,6 @@ import { isAxiosError } from 'axios';
 
 /**
  * Refresh session tokens (server-side)
- * Backend expects POST /api/auth/refresh
  */
 export const checkServerSession = async () => {
   const cookieStore = await cookies();
@@ -25,15 +24,27 @@ export const checkServerSession = async () => {
 /**
  * Get current user (server-side)
  */
-export const getServerMe = async () => {
-  const cookieStore = await cookies();
-  // Backend endpoint is /users/me/profile, not /users/me
-  const { data } = await api.get<User>('/users/me/profile', {
-    headers: {
-      Cookie: cookieStore.toString(),
-    },
-  });
-  return data;
+export const getServerMe = async (): Promise<User | null> => {
+  try {
+    const cookieStore = await cookies();
+
+    const accessToken = cookieStore.get('accessToken')?.value;
+    const refreshToken = cookieStore.get('refreshToken')?.value;
+
+    // Якщо немає жодного токена, не робити запит
+    if (!accessToken && !refreshToken) {
+      return null;
+    }
+
+    const { data } = await api.get<User>('/users/me/profile', {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
+    });
+    return data;
+  } catch {
+    return null;
+  }
 };
 
 export async function getUsersServer(

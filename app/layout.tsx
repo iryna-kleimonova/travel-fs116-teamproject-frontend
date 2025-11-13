@@ -8,9 +8,10 @@ import AuthProvider from '@/components/AuthProvider/AuthProvider';
 import { Metadata } from 'next';
 import { Toaster } from 'react-hot-toast';
 import BreakpointInitializer from '@/components/Providers/BreakpointInitializer';
+import { getServerMe } from '@/lib/api/serverApi';
+import { User } from '@/types/user';
 
-import Header from '@/components/Header/Header';
-import Footer from '@/components/Footer/Footer';
+
 
 const nunitoSans = Nunito_Sans({
   subsets: ['cyrillic'],
@@ -53,20 +54,31 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let initialUser: User | null = null;
+  try {
+    initialUser = await getServerMe();
+  } catch {
+    // Якщо помилка (401, 403, тощо), користувач не залогінений
+    initialUser = null;
+  }
+
   return (
     <html lang="uk">
       <body className={`${nunitoSans.variable} ${sora.variable}`}>
         <BreakpointInitializer />
         <TanStackProvider>
+
           <AuthProvider>
-            <Header />
+
+          <AuthProvider initialUser={initialUser}>
+
             {children}
-            <Footer />
+
             <Toaster
               position="top-right"
               toastOptions={{

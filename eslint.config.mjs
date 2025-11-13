@@ -16,6 +16,15 @@ const eslintConfig = [
   {
     rules: {
       'react/no-unescaped-entities': 'off',
+      // ✅ Дозволити невикористані змінні, які починаються з _
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
     },
   },
 ];

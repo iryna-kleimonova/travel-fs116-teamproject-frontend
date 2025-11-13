@@ -30,7 +30,7 @@ export const useAuth = () => {
     } catch (error) {
       const message = extractErrorMessage(error);
       toast.error(message);
-      throw error;
+      throw new Error(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -49,7 +49,7 @@ export const useAuth = () => {
     } catch (error) {
       const message = extractErrorMessage(error);
       toast.error(message);
-      throw error;
+      throw new Error(message);
     } finally {
       setIsSubmitting(false);
     }

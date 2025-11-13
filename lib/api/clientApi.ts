@@ -103,8 +103,6 @@ export async function fetchStories(page = 1, perPage = 3): Promise<Story[]> {
   return response.data?.data || [];
 }
 
-fetchStories(1, 3);
-
 export async function addStoryToFavorites(storyId: string): Promise<void> {
   await api.post(`/stories/${storyId}/favorite`);
 }
