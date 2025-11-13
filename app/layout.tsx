@@ -9,6 +9,9 @@ import { Metadata } from 'next';
 import { Toaster } from 'react-hot-toast';
 import BreakpointInitializer from '@/components/Providers/BreakpointInitializer';
 
+import Header from '@/components/Header/Header';
+import Footer from '@/components/Footer/Footer';
+
 const nunitoSans = Nunito_Sans({
   subsets: ['cyrillic'],
   weight: ['400', '500', '600', '700', '800', '900'],
@@ -61,7 +64,9 @@ export default function RootLayout({
         <BreakpointInitializer />
         <TanStackProvider>
           <AuthProvider>
+            <Header />
             {children}
+            <Footer />
             <Toaster
               position="top-right"
               toastOptions={{

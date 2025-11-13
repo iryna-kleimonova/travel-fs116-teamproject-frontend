@@ -1,32 +1,39 @@
-// components/TravellersList/TravellersList.tsx
+import TravellersListClient from './TravellersListClient';
 import { getUsersServer } from '@/lib/api/serverApi';
 import type { User } from '@/types/user';
-import TravellersListClient from './TravellersListClient';
-import styles from './TravellersList.module.css';
+import defaultStyles from './TravellersList.module.css';
 
-export default async function TravellersList() {
+interface Props {
+  initialPerPage?: number; // для SSR
+  loadMorePerPage: number; // для клієнта
+  showLoadMoreOnMobile?: boolean;
+  customStyles?: typeof defaultStyles;
+}
+
+export default async function TravellersList({
+  initialPerPage = 12,
+  loadMorePerPage,
+  showLoadMoreOnMobile = false,
+  customStyles,
+}: Props) {
   let initialUsers: User[] = [];
   let totalPages = 1;
 
   try {
-    const res = await getUsersServer(1, 4);
+    const res = await getUsersServer(1, initialPerPage);
     initialUsers = res.data.users ?? [];
     totalPages = res.data.totalPages ?? 1;
   } catch (err) {
-    console.error('Error fetching users:', err);
+    console.error(err);
   }
 
   return (
-    <>
-      <h2 className={styles.travellers__title}>Наші Мандрівники</h2>
-
-      {/* Клієнтський компонент для рендеру списку */}
-      <TravellersListClient
-        initialUsers={initialUsers}
-        perPage={4}
-        totalPages={totalPages}
-        initialPage={1}
-      />
-    </>
+    <TravellersListClient
+      initialUsers={initialUsers}
+      loadMorePerPage={loadMorePerPage}
+      totalPages={totalPages}
+      showLoadMoreOnMobile={showLoadMoreOnMobile}
+      customStyles={customStyles}
+    />
   );
 }

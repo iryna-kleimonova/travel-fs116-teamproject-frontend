@@ -1,54 +1,57 @@
 'use client';
-
 import { useState, useRef, useEffect } from 'react';
 import type { User } from '@/types/user';
 import { getUsersClient } from '@/lib/api/clientApi';
-import Loader from '@/components/Loader/Loader';
 import TravellerInfo from '@/components/TravellerInfo/TravellerInfo';
 import Link from 'next/link';
-import styles from './TravellersList.module.css';
+import Loader from '@/components/Loader/Loader';
+import defaultStyles from './TravellersList.module.css';
 
 interface Props {
   initialUsers: User[];
-  perPage: number;
+  loadMorePerPage: number;
   totalPages: number;
-  initialPage?: number;
-}
-
-export interface GetUsersClientResponse {
-  data: {
-    users: User[];
-    page: number;
-    perPage: number;
-    totalItems: number;
-    totalPages: number;
-    hasPreviousPage: boolean;
-    hasNextPage: boolean;
-  };
-  status: number;
-  message: string;
+  showLoadMoreOnMobile?: boolean;
+  customStyles?: typeof defaultStyles;
 }
 
 export default function TravellersListClient({
   initialUsers,
-  perPage,
-  totalPages,
-  initialPage = 1,
+  loadMorePerPage,
+  showLoadMoreOnMobile = false,
+  customStyles,
 }: Props) {
-  const [users, setUsers] = useState<User[]>(initialUsers);
-  const [page, setPage] = useState(initialPage);
+  const styles = customStyles || defaultStyles;
+
+  // Не визначаємо isMobile на сервері, початково null
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+
+  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
   const isFetchingRef = useRef(false);
 
-  // Визначення мобільного екрану
+  // Встановлюємо isMobile на клієнті та слухаємо resize
   useEffect(() => {
-    const checkIsMobile = () => setIsMobile(window.innerWidth < 768);
-    checkIsMobile();
-    window.addEventListener('resize', checkIsMobile);
-    return () => window.removeEventListener('resize', checkIsMobile);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+
+    handleResize(); // початкове значення на клієнті
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Адаптивне обрізання першого завантаження, тільки на клієнті
+  useEffect(() => {
+    if (isMobile === null) return; // не рендеримо на сервері
+
+    let count = initialUsers.length;
+
+    if (window.innerWidth >= 1440) count = Math.min(initialUsers.length, 12);
+    else if (window.innerWidth >= 768) count = Math.min(initialUsers.length, 8);
+    else count = Math.min(initialUsers.length, 8);
+
+    setUsers(initialUsers.slice(0, count));
+  }, [initialUsers, isMobile]);
 
   const handleLoadMore = async () => {
     if (isFetchingRef.current || !hasMore) return;
@@ -57,51 +60,40 @@ export default function TravellersListClient({
     setLoading(true);
 
     try {
-      const nextPage = page + 1;
-      const res = await getUsersClient({ page: nextPage, perPage: 12 }); // бекенд повертає до 12
-      console.log('[CLIENT LOAD MORE] API response:', res.data.users);
-
-      // Беремо масив користувачів з відповіді
-      const newUsersFromServer = res?.data?.users ?? [];
-
-      // Якщо сервер повернув порожній масив → кінець сторінок
-      if (newUsersFromServer.length === 0) {
-        setHasMore(false);
-        return;
-      }
-
-      // беремо лише потрібну кількість (perPage, наприклад 4)
-      const newUsers = newUsersFromServer.slice(0, perPage);
-
-      setUsers(prev => {
-        const existingIds = new Set(prev.map((u: User) => u._id));
-        return [
-          ...prev,
-          ...newUsers.filter((u: User) => !existingIds.has(u._id)),
-        ];
+      const offset = users.length;
+      const res = await getUsersClient({
+        page: Math.floor(offset / loadMorePerPage) + 1,
+        perPage: loadMorePerPage,
       });
 
-      console.log('[CLIENT LOAD MORE] New users added:', newUsers);
+      const newUsersFromServer = res.data.users ?? [];
 
-      if (newUsers.length < perPage || nextPage >= totalPages) {
-        setHasMore(false);
-      }
+      setUsers(prev => {
+        const existingIds = new Set(prev.map(u => u._id));
+        const filteredNewUsers = newUsersFromServer.filter(
+          u => !existingIds.has(u._id)
+        );
+        return [...prev, ...filteredNewUsers];
+      });
 
-      setPage(nextPage);
+      setHasMore(newUsersFromServer.length === loadMorePerPage);
     } catch (err) {
-      console.error('Помилка при завантаженні користувачів:', err);
+      console.error('Помилка підвантаження користувачів:', err);
     } finally {
       isFetchingRef.current = false;
       setLoading(false);
     }
   };
 
+  // Чекаємо, поки isMobile визначиться на клієнті
+  if (isMobile === null) return null;
+
   return (
     <>
       <ul className={styles.travellers__list}>
         {users.map(user => (
           <li key={user._id} className={styles.travellers__item}>
-            <TravellerInfo user={user} useDefaultStyles={true} />
+            <TravellerInfo user={user} useDefaultStyles />
             <Link
               href={`/travellers/${user._id}`}
               className={styles.traveller__btn}
@@ -112,17 +104,16 @@ export default function TravellersListClient({
         ))}
       </ul>
 
-      {/* Кнопка і лоадер тільки для десктопів */}
-      {!isMobile && (
+      {hasMore && (!isMobile || showLoadMoreOnMobile) && (
         <div className={styles.loadMoreWrapper}>
-          {loading && <Loader className={styles.loader} />}
-          {!loading && hasMore && (
+          {loading ? (
+            <Loader className={styles.loader} />
+          ) : (
             <button
-              type="button"
               className={styles.traveller__btn__more}
               onClick={handleLoadMore}
             >
-              Переглянути всіх
+              Переглянути ще
             </button>
           )}
         </div>
