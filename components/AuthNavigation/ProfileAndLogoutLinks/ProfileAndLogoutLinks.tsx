@@ -4,6 +4,7 @@ import css from './ProfileAndLogoutLinks.module.css';
 import Link from 'next/link';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useAuthStore } from '@/lib/store/authStore';
+import Modal from '@/components/Modal/Modal';
 
 import { useState } from 'react';
 
@@ -18,20 +19,29 @@ export default function ProfileAndLogoutLinks({
   const user = useAuthStore(state => state.user);
 
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleLogoutClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setIsModalOpen(true);
+  };
 
+  const handleConfirmLogout = async () => {
     if (isLoggingOut) return; // Запобігаємо подвійному кліку
 
     try {
       setIsLoggingOut(true);
+      setIsModalOpen(false);
       await logout();
     } catch (error) {
       console.error('Logout failed:', error);
     } finally {
       setIsLoggingOut(false);
     }
+  };
+
+  const handleCancelLogout = () => {
+    setIsModalOpen(false);
   };
 
   // Отримуємо ім'я користувача або дефолтне значення
@@ -56,7 +66,7 @@ export default function ProfileAndLogoutLinks({
         className={`${css.divider} ${variant === 'header-main-page' ? css.dividerMainPage : ''}`}
       ></div>
       <button
-        onClick={handleLogout}
+        onClick={handleLogoutClick}
         className={css.logoutLink}
         type="button"
         disabled={isLoggingOut}
@@ -67,6 +77,16 @@ export default function ProfileAndLogoutLinks({
           className={`${css.logoutIcon} ${variant === 'header-main-page' ? css.logoutIconMainPage : ''}`}
         />
       </button>
+
+      <Modal
+        title="Ви точно хочете вийти?"
+        message="Ми будемо сумувати за вами!"
+        confirmButtonText="Вийти"
+        cancelButtonText="Відмінити"
+        onConfirm={handleConfirmLogout}
+        onCancel={handleCancelLogout}
+        isOpen={isModalOpen}
+      />
     </div>
   );
 }
