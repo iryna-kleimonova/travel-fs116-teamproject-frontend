@@ -1,21 +1,20 @@
+// Components/AuthNavigation/AuthNavigation.tsx
+
 'use client';
 
 import Link from 'next/link';
 import css from './AuthNavigation.module.css';
 import ProfileAndLogoutLinks from './ProfileAndLogoutLinks/ProfileAndLogoutLinks';
 import { useAuthStore } from '@/lib/store/authStore';
+import PublishStoryLink from '../Navigation/PublishStoryLink/PublishStoryLink';
 
 type NavProps = {
   variant?: 'header-main-page' | 'mobile-menu';
+  handleClick: (value: boolean) => void;
 };
 
-export default function AuthNavigation({ variant }: NavProps) {
+export default function AuthNavigation({ variant, handleClick }: NavProps) {
   const isAuthenticated = useAuthStore(state => state.isAuthenticated);
-  const isLoading = useAuthStore(state => state.isLoading);
-  if (isLoading) {
-    // Можна показати skeleton або просто не показувати нічого
-    return null; // або <li>Завантаження...</li>
-  }
 
   return (
     <>
@@ -26,6 +25,9 @@ export default function AuthNavigation({ variant }: NavProps) {
               href="/auth/login"
               prefetch={false}
               className={`${css.loginLink} ${variant === 'header-main-page' ? css.loginLinkMainPage : ''}`}
+              onClick={() => {
+                handleClick(false);
+              }}
             >
               Вхід
             </Link>
@@ -35,6 +37,9 @@ export default function AuthNavigation({ variant }: NavProps) {
               href="/auth/register"
               prefetch={false}
               className={`${css.loginLink} ${css.loginLinkRegister} ${variant === 'header-main-page' ? css.loginLinkRegisterMainPage : ''} ${variant === 'mobile-menu' ? css.loginLinkRegisterMobileMenu : ''}`}
+              onClick={() => {
+                handleClick(false);
+              }}
             >
               Реєстрація
             </Link>
@@ -45,14 +50,9 @@ export default function AuthNavigation({ variant }: NavProps) {
       {isAuthenticated && (
         <>
           <li
-            className={`${css.publichStoryItem} ${variant === 'header-main-page' ? css.publichStoryItemMainPage : ''}`}
+            className={` ${css.loginItem} ${variant === 'mobile-menu' ? css.loginItemPublishStoryMobileMenu : ''}`}
           >
-            <Link
-              className={`${css.publichStoryLink} ${variant === 'header-main-page' ? css.publichStoryLinkMainPage : ''}`}
-              href="/stories/create"
-            >
-              Опублікувати історію
-            </Link>
+            <PublishStoryLink />
           </li>
           <li>
             <ProfileAndLogoutLinks variant={variant} />

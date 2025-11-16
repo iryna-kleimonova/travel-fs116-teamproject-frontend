@@ -207,56 +207,6 @@
   cursor: not-allowed;
 }
 
-/* Dark theme specific styles */
-[data-theme='dark'] .closeIcon {
-  fill: var(--color-white, var(--color-text-inverse));
-  stroke: var(--color-scheme-1-text, var(--color-text-primary));
-}
-
-[data-theme='dark'] .cancelButton {
-  background-color: var(--color-bg-tertiary);
-  border-color: var(--color-border-light);
-  color: var(--color-text-primary);
-}
-
-[data-theme='dark'] .cancelButton:hover:not(:disabled),
-[data-theme='dark'] .cancelButton:focus:not(:disabled) {
-  background-color: #4c4c4c;
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
-}
-
-[data-theme='dark'] .cancelButton:active:not(:disabled) {
-  background-color: #4c4c4c;
-  border-color: var(--color-border-light);
-  transform: translateY(0);
-  box-shadow: none;
-}
-
-[data-theme='dark'] .cancelButton:disabled {
-  background-color: var(--color-bg-secondary);
-  border-color: var(--color-border);
-  color: var(--color-text-primary);
-  opacity: 0.3;
-}
-
-[data-theme='dark'] .confirmButton:hover:not(:disabled),
-[data-theme='dark'] .confirmButton:focus:not(:disabled) {
-  background-color: #8daefb;
-  border-color: rgba(0, 0, 0, 0.3);
-  color: var(--color-text-primary);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
-}
-
-[data-theme='dark'] .confirmButton:active:not(:disabled) {
-  background-color: #1a2b50;
-  border-color: #3a4b70;
-  color: var(--color-text-inverse);
-  box-shadow: none;
-}
-
 /* Tablet */
 @media (min-width: 768px) {
   .modal {
