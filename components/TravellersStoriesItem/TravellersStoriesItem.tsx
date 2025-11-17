@@ -12,6 +12,7 @@ import {
 import css from './TravellersStoriesItem.module.css';
 import { Icon } from '../Icon/Icon';
 import Link from 'next/link';
+import Modal from '../Modal/Modal';
 
 interface TravellersStoriesItemProps {
   story: Story;
@@ -26,12 +27,11 @@ export default function TravellersStoriesItem({
   const [isSaved, setIsSaved] = useState(story.isFavorite ?? false);
   const [isSaving, setIsSaving] = useState(false);
   const [favoriteCount, setFavoriteCount] = useState(story.favoriteCount);
-
-
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const handleSave = async () => {
     if (!isAuthenticated) {
-      router.push('/auth/register');
+      setIsAuthModalOpen(true);
       return;
     }
 
@@ -48,8 +48,12 @@ export default function TravellersStoriesItem({
         setIsSaved(false);
         toast('Видалено із збережених');
       }
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      if (error?.response?.status === 401) {
+        setIsAuthModalOpen(true);
+      } else {
+        console.error(error);
+      }
     } finally {
       setIsSaving(false);
     }
@@ -118,6 +122,25 @@ export default function TravellersStoriesItem({
           </button>
         </div>
       </div>
+
+      <Modal
+        title="Помилка під час збереження"
+        message="Щоб зберегти статтю вам треба увійти, якщо ще немає облікового запису зареєструйтесь"
+        confirmButtonText="Зареєструватись"
+        cancelButtonText="Увійти"
+        onConfirm={() => {
+          setIsAuthModalOpen(false);
+          router.push("/auth/register");
+        }}
+        onCancel={() => {
+          setIsAuthModalOpen(false);
+          router.push("/auth/login");
+        }}
+        onClose={() => {
+          setIsAuthModalOpen(false);
+        }}
+        isOpen={isAuthModalOpen}
+      />
     </li>
   );
 }

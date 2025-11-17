@@ -11,6 +11,7 @@ interface ModalProps {
   cancelButtonText: string;
   onConfirm: () => void;
   onCancel: () => void;
+  onClose?: () => void;
   isOpen?: boolean;
 }
 
@@ -21,14 +22,17 @@ export default function Modal({
   cancelButtonText,
   onConfirm,
   onCancel,
+  onClose,
   isOpen = true,
 }: ModalProps) {
+  const handleClose = onClose || onCancel;
+
   useEffect(() => {
     if (!isOpen) return;
 
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onCancel();
+        handleClose();
       }
     };
 
@@ -40,13 +44,13 @@ export default function Modal({
       document.body.style.overflow = '';
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
+  }, [isOpen, handleClose]);
 
   if (!isOpen) return null;
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-      onCancel();
+      handleClose();
     }
   };
 
@@ -58,12 +62,16 @@ export default function Modal({
     onCancel();
   };
 
+  const handleCloseButton = () => {
+    handleClose();
+  };
+
   return (
     <div className={styles.backdrop} onClick={handleBackdropClick}>
       <div className={styles.modal}>
         <button
           className={styles.closeButton}
-          onClick={handleCancel}
+          onClick={handleCloseButton}
           aria-label="Закрити"
           type="button"
         >

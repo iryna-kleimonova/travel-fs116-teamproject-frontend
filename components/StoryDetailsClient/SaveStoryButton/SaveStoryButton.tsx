@@ -57,9 +57,9 @@ export const SaveStoryButton = ({
         {label}
       </button>
 
-            <Modal
+      <Modal
         title="Помилка під час збереження"
-        message="Щоб зберегти статтю вам треба увійти, якщо ще немає облікового запису — зареєструйтесь."
+        message="Щоб зберегти статтю вам треба увійти, якщо ще немає облікового запису зареєструйтесь"
         confirmButtonText="Зареєструватись"
         cancelButtonText="Увійти"
         onConfirm={() => {
@@ -69,6 +69,9 @@ export const SaveStoryButton = ({
         onCancel={() => {
           setIsAuthModalOpen(false);
           router.push("/auth/login");
+        }}
+        onClose={() => {
+          setIsAuthModalOpen(false);
         }}
         isOpen={isAuthModalOpen}
       />
